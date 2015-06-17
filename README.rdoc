@@ -1,6 +1,6 @@
 = tarvit-helpers
 
-Description goes here.
+Simple helpers for Ruby.
 
 == Contributing to tarvit-helpers
  
