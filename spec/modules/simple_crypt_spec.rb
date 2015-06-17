@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe '' do
+describe SimpleCrypt do
 
   it 'should crypt/decrypt by secret key' do
     key = 'very_secret-key'
