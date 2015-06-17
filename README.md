@@ -4,8 +4,8 @@ Simple helpers for Ruby.
 _Non Shared Accessors
 Ruby language has a specific behavior of class variables. They are shared among all subclasses.
 
-```ruby
 As result they behave like that:
+```ruby
 class A
   cattr_accessor :value
 end
