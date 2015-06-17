@@ -1,7 +1,8 @@
 **tarvit-helpers**
 
 Simple helpers for Ruby.
-_Non Shared Accessors
+
+**Non Shared Accessors**
 Ruby language has a specific behavior of class variables. They are shared among all subclasses.
 
 As result they behave like that:
