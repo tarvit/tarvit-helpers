@@ -22,6 +22,11 @@ B.value
 => nil
 
 A.value = 2
+A.value
+=> 2
+B.value
+=> 2
+
 B.value = 3
 
 A.value
