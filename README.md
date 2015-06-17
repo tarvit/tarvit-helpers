@@ -3,6 +3,7 @@
 Simple helpers for Ruby.
 
 **Non Shared Accessors**
+
 Ruby language has a specific behavior of class variables. They are shared among all subclasses.
 
 As result they behave like that:
