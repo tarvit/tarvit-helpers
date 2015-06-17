@@ -29,7 +29,7 @@ Gem::Specification.new do |s|
     "lib/modules/simple_crypt.rb",
     "lib/tarvit-helpers.rb",
     "spec/modules/non_shared_accessors_spec.rb",
-    "spec/modules/simple_crypt.rb",
+    "spec/modules/simple_crypt_spec.rb",
     "spec/spec_helper.rb",
     "tarvit-helpers.gemspec"
   ]
