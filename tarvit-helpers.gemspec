@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   s.authors = ["Vitaly Tarasenko"]
   s.date = "2015-06-17"
-  s.description = "TODO: longer description of your gem"
+  s.description = " Simple extensions to standard Ruby classes and useful helpers. "
   s.email = "vetal.tarasenko@gmail.com"
   s.extra_rdoc_files = [
     "LICENSE.txt",
@@ -32,7 +32,7 @@ Gem::Specification.new do |s|
   s.homepage = "http://github.com/tarvit/tarvit-helpers"
   s.licenses = ["MIT"]
   s.rubygems_version = "2.2.2"
-  s.summary = "TODO: one-line summary of your gem"
+  s.summary = "Simple extensions to standard Ruby classes and useful helpers."
 
   if s.respond_to? :specification_version then
     s.specification_version = 4
