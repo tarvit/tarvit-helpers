@@ -1,6 +1,32 @@
 = tarvit-helpers
 
 Simple helpers for Ruby.
+Non Shared Accessors
+Ruby language has a specific behavior of class variables. They are shared among all subclasses.
+
+```ruby
+As result they behave like that:
+class A
+  cattr_accessor :value
+end
+
+class B < A
+
+end
+
+A.value
+=> nil
+B.value
+=> nil
+
+A.value = 2
+B.value = 3
+
+A.value
+=> 3
+B.value
+=> 3
+```
 
 == Contributing to tarvit-helpers
  
