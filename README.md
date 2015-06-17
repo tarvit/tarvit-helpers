@@ -16,12 +16,8 @@ class B < A
 
 end
 
-A.value
-=> nil
-B.value
-=> nil
-
 A.value = 2
+
 A.value
 => 2
 B.value
