@@ -25,6 +25,7 @@ Gem::Specification.new do |s|
     "README.rdoc",
     "Rakefile",
     "lib/tarvit-helpers.rb",
+    "tarvit-helpers.gemspec",
     "test/helper.rb",
     "test/test_tarvit-helpers.rb"
   ]
