@@ -1,7 +1,7 @@
 **tarvit-helpers**
 
 Simple helpers for Ruby.
-Non Shared Accessors
+_Non Shared Accessors
 Ruby language has a specific behavior of class variables. They are shared among all subclasses.
 
 ```ruby
@@ -27,6 +27,33 @@ A.value
 B.value
 => 3
 ```
+NonSharedAccessors module allows to create non shared accessors.
+```ruby
+class A
+  include NonSharedAccessors
+  non_shared_cattr_accessor :value
+end
+
+class B < A
+
+end
+
+
+A.value = 2
+
+A.value
+=> 2
+B.value
+=> nil
+
+B.value = 3
+
+A.value
+=> 2
+B.value
+=> 3
+```
+
 
 == Contributing to tarvit-helpers
  
