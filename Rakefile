@@ -17,8 +17,8 @@ Jeweler::Tasks.new do |gem|
   gem.name = "tarvit-helpers"
   gem.homepage = "http://github.com/tarvit/tarvit-helpers"
   gem.license = "MIT"
-  gem.summary = %Q{TODO: one-line summary of your gem}
-  gem.description = %Q{TODO: longer description of your gem}
+  gem.summary = %Q{ Simple extensions to standard Ruby classes and useful helpers. }
+  gem.description = %Q{ Simple extensions to standard Ruby classes and useful helpers. }
   gem.email = "vetal.tarasenko@gmail.com"
   gem.authors = ["Vitaly Tarasenko"]
   # dependencies defined in Gemfile
