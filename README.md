@@ -1,4 +1,4 @@
-= tarvit-helpers
+**tarvit-helpers**
 
 Simple helpers for Ruby.
 Non Shared Accessors
