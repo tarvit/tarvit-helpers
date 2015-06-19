@@ -1,5 +1,7 @@
 source 'http://rubygems.org'
 
+gem 'activesupport', '~> 4.2'
+
 group :development do
   gem 'shoulda', '>= 0'
   gem 'rdoc', '~> 3.12'
