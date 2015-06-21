@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 
-gem 'activesupport', '~> 4.2'
+gem 'activesupport', '~> 4.0'
 
 group :development do
   gem 'shoulda', '>= 0'
