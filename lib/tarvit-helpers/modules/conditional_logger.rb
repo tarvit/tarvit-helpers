@@ -12,7 +12,7 @@ module TarvitHelpers
 
     def print *message
       return if @quiet
-      Kernel::puts *message
+      Kernel::print *message
     end
 
     def log *message
