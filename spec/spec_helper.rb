@@ -6,8 +6,10 @@ require 'pry'
 
 # files
 require_relative '../lib/tarvit-helpers'
-require_relative '../lib/modules/non_shared_accessors'
-require_relative '../lib/modules/simple_crypt'
+require_relative '../lib/tarvit-helpers/modules/non_shared_accessors'
+require_relative '../lib/tarvit-helpers/modules/simple_crypt'
+require_relative '../lib/tarvit-helpers/modules/conditional_logger'
+
 include TarvitHelpers
 
 RSpec.configure do |config|
