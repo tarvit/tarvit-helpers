@@ -40,7 +40,7 @@ describe HashPresenter::SimpleHashPresenter do
 
   context 'Special Behavior' do
 
-    it 'should not depend on attribute object' do
+    it 'should not depend on an attribute object' do
       original = { a: 2 }
       hp = HashPresenter::SimpleHashPresenter.new(original)
 
@@ -51,7 +51,7 @@ describe HashPresenter::SimpleHashPresenter do
       expect(hp.a).to eq(2)
     end
 
-    it 'should regenerate method result for nested hash' do
+    it 'should regenerate method result for a nested hash' do
       hp = HashPresenter::SimpleHashPresenter.new(a: { b: 1 })
       expect(hp.a.object_id).to_not eq(hp.a.object_id)
     end
@@ -65,7 +65,7 @@ describe HashPresenter::CachedHashPresenter do
 
   context 'Special Behavior' do
 
-    it 'should not depend on attribute object' do
+    it 'should not depend on an attribute object' do
       original = { a: 2 }
       hp = HashPresenter::CachedHashPresenter.new(original)
 
@@ -76,7 +76,7 @@ describe HashPresenter::CachedHashPresenter do
       expect(hp.a).to eq(2)
     end
 
-    it 'should not calculate result for nested hash twice' do
+    it 'should not calculate result for a nested hash twice' do
       hp = HashPresenter::CachedHashPresenter.new(a: { b: 1 })
       expect(hp.a.object_id).to eq(hp.a.object_id)
     end
@@ -110,7 +110,7 @@ describe HashPresenter::ObservableHashPresenter do
       expect(hp.c).to eq(4)
     end
 
-    it 'should regenerate method result for nested hash' do
+    it 'should regenerate method result for a nested hash' do
       hp = HashPresenter::ObservableHashPresenter.new(a: { b: 1 })
       expect(hp.a.object_id).to_not eq(hp.a.object_id)
     end
