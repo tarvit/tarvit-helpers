@@ -1,44 +1,81 @@
 module TarvitHelpers
-  class HashPresenter
-    require 'active_support/core_ext/string'
+  module HashPresenter
 
-    attr_reader :hash
-
-    def initialize(hash)
-      @hash = prepare_keys(hash)
+    def self.present(hash, option = :cached )
+      raise ArgumentError.new("#{ hash.class } is not a Hash") unless hash.is_a?(Hash)
+      factory[option].new(hash)
     end
 
-    def method_missing(m, *args)
-      return value(m) if accessor_method?(m)
-      super
+    def self.factory
+      { cached: CachedHashPresenter, observable: ObservableHashPresenter }
     end
 
-    protected
+    class SimpleHashPresenter
+      require 'active_support/core_ext/string'
 
-    def value(method_name)
-      res = @hash[method_name]
-      transform_value(res)
-    end
+      attr_reader :hash
 
-    def transform_value(x)
-      return x.map{|x| transform_value(x) } if x.is_a?(Array)
-      x.is_a?(Hash) ? self.class.new(x) : x
-    end
-
-    def accessor_method?(method_name)
-      @hash.keys.include?(method_name)
-    end
-
-    def key_to_method(key)
-      key.to_s.gsub(/\s+/, ?_).underscore.to_sym
-    end
-
-    def prepare_keys(hash)
-      res = hash.map do |k ,v|
-        [ key_to_method(k), v ]
+      def initialize(hash)
+        @hash = prepare_keys(hash)
       end
-      Hash[res]
+
+      def method_missing(m, *args)
+        return value(m) if accessor_method?(m)
+        super
+      end
+
+      protected
+
+      def value(method_name)
+        res = self.hash[method_name]
+        transform_value(res)
+      end
+
+      def transform_value(x)
+        return x.map{|x| transform_value(x) } if x.is_a?(Array)
+        x.is_a?(Hash) ? self.class.new(x) : x
+      end
+
+      def accessor_method?(method_name)
+        self.hash.keys.include?(method_name)
+      end
+
+      def key_to_method(key)
+        key.to_s.gsub(/\s+/, ?_).underscore.to_sym
+      end
+
+      def prepare_keys(hash)
+        res = hash.map do |k ,v|
+          [ key_to_method(k), v ]
+        end
+        Hash[res]
+      end
+
+    end
+
+    class CachedHashPresenter < SimpleHashPresenter
+
+      def initialize(hash)
+        super
+        @cache = {}
+      end
+
+      def value(method_name)
+        @cache[method_name] ||= super
+      end
+
+    end
+
+    class ObservableHashPresenter < SimpleHashPresenter
+      def initialize(hash)
+        @hash = hash
+      end
+
+      def hash
+        prepare_keys(@hash)
+      end
     end
 
   end
 end
+
