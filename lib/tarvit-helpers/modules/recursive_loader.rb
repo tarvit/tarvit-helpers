@@ -23,9 +23,13 @@ module TarvitHelpers
       end
     end
 
-    def self.load_modules(dir, priorities=[], method=:require)
-      new(method).load_modules(dir, priorities)
+    module Context
+      def load_modules(dir, priorities=[], method=:require)
+        RecursiveLoader.new(method).load_modules(dir, priorities)
+      end
     end
+
+    extend Context
 
     private
 
