@@ -56,6 +56,23 @@ B.value
 => 3
 ```
 
+HashPresenter module allows to present hashes as pure ojects.
+```ruby
+hp = HashPresenter.present({ a: 1, b: 2 })
+hp.a
+=> 1
+hp.b
+=> 2
+
+original = { a: 1, b: 2 }
+observer = HashPresenter.present(original, :observable)
+observer.a
+=> 1
+original[:a] = 3
+observer.a
+=> 3
+```
+
 
 **Contributing to tarvit-helpers**
  
