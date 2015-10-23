@@ -10,6 +10,7 @@ module BaseHashPresenterTest
       expect(hp.b).to eq(2)
       expect(hp.c).to eq([ 3 ])
       expect(->{ hp.d }).to raise_error(NoMethodError)
+      expect(hp._hash.values).to eq([1, 2, [3]])
     end
 
     it 'should transform complex keys' do

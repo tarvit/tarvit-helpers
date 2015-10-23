@@ -13,10 +13,10 @@ module TarvitHelpers
     class SimpleHashPresenter
       require 'active_support/core_ext/string'
 
-      attr_reader :hash
+      attr_reader :_hash
 
       def initialize(hash)
-        @hash = prepare_keys(hash)
+        @_hash = prepare_keys(hash)
       end
 
       def method_missing(m, *args)
@@ -27,7 +27,7 @@ module TarvitHelpers
       protected
 
       def value(method_name)
-        res = self.hash[method_name]
+        res = self._hash[method_name]
         transform_value(res)
       end
 
@@ -37,7 +37,7 @@ module TarvitHelpers
       end
 
       def accessor_method?(method_name)
-        self.hash.keys.include?(method_name)
+        self._hash.keys.include?(method_name)
       end
 
       def key_to_method(key)
@@ -68,11 +68,11 @@ module TarvitHelpers
 
     class ObservableHashPresenter < SimpleHashPresenter
       def initialize(hash)
-        @hash = hash
+        @_hash = hash
       end
 
-      def hash
-        prepare_keys(@hash)
+      def _hash
+        prepare_keys(@_hash)
       end
     end
 
