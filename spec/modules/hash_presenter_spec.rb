@@ -148,11 +148,33 @@ describe HashPresenter::CustomHashPresenter do
 
         rules.when([ :user, :age ]){|age| age.to_i }
         rules.when([ :user, :posts, :title ]){|title| title.capitalize }
+        rules.when([ :user,:address ]){|list| list.join(?/) }
       end
 
       expect(presenter.user.date).to eq(Date.new(2015, 11, 11))
       expect(presenter.user.age).to eq(11)
+      expect(presenter.user.address).to eq('USA/NY/Ba Street')
       expect(presenter.user.posts[0].title).to eq('Some title')
+    end
+
+    it 'should declare nested presenters' do
+      presenter = HashPresenter::CustomHashPresenter.new(@hash) do |rules|
+
+        rules.when([ :user, :date ]) do |value|
+          Date.parse(value)
+        end
+
+        rules.when([ :user, :posts ])do |posts|
+          posts.map do |post|
+            HashPresenter::CustomHashPresenter.new(post) do |post_rules|
+              post_rules.when([ :title ]){|title| title.upcase }
+            end
+          end
+        end
+      end
+
+      expect(presenter.user.date).to eq(Date.new(2015, 11, 11))
+      expect(presenter.user.posts[0].title).to eq('SOME TITLE')
     end
 
   end
