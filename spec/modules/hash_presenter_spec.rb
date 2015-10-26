@@ -118,6 +118,48 @@ describe HashPresenter::ObservableHashPresenter do
   end
 end
 
+
+describe HashPresenter::CustomHashPresenter do
+  extend BaseHashPresenterTest
+  test_presenter(HashPresenter::CustomHashPresenter)
+
+  context 'Special Behavior' do
+    before :each do
+      @hash = {
+          user: {
+              date: '11/11/2015',
+              age: '11',
+              address: [
+                  'USA', 'NY', 'Ba Street'
+              ],
+              posts: [
+                  { id: '1', title: 'some title' },
+                  { id: '2', title: 'the other title' },
+              ],
+          }
+      }
+    end
+
+    it 'should customize presenter' do
+      presenter = HashPresenter::CustomHashPresenter.new(@hash) do |rules|
+        rules.when([ :user, :date ]) do |value|
+          Date.parse(value)
+        end
+
+        rules.when([ :user, :age ]){|age| age.to_i }
+        rules.when([ :user, :posts, :title ]){|title| title.capitalize }
+      end
+
+      expect(presenter.user.date).to eq(Date.new(2015, 11, 11))
+      expect(presenter.user.age).to eq(11)
+      expect(presenter.user.posts[0].title).to eq('Some title')
+    end
+
+  end
+
+end
+
+
 describe HashPresenter do
 
   it 'should present hashes' do
@@ -140,6 +182,5 @@ describe HashPresenter do
     hp = HashPresenter.present({  }, :cached)
     expect(hp).to be_a(HashPresenter::CachedHashPresenter)
   end
-
 
 end

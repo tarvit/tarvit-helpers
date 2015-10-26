@@ -13,14 +13,15 @@ module TarvitHelpers
     class SimpleHashPresenter
       require 'active_support/core_ext/string'
 
-      attr_reader :_hash
+      attr_reader :_hash, :_levels
 
-      def initialize(hash)
-        @_hash = prepare_keys(hash)
+      def initialize(hash, levels=[])
+        @_hash = _prepare_keys(hash)
+        @_levels = levels
       end
 
       def method_missing(m, *args)
-        return value(m) if accessor_method?(m)
+        return value(m) if _accessor_method?(m)
         super
       end
 
@@ -28,34 +29,42 @@ module TarvitHelpers
 
       def value(method_name)
         res = self._hash[method_name]
-        transform_value(res)
+        _transform_value(method_name, res)
       end
 
-      def transform_value(x)
-        return x.map{|x| transform_value(x) } if x.is_a?(Array)
-        x.is_a?(Hash) ? self.class.new(x) : x
+      def _transform_value(method_name, value)
+        return value.map{|key| _transform_value(method_name, key) } if value.is_a?(Array)
+        value.is_a?(Hash) ? _new_level_presenter(value, method_name) : value
       end
 
-      def accessor_method?(method_name)
+      def _accessor_method?(method_name)
         self._hash.keys.include?(method_name)
       end
 
-      def key_to_method(key)
+      def _key_to_method(key)
         key.to_s.gsub(/\s+/, ?_).underscore.to_sym
       end
 
-      def prepare_keys(hash)
+      def _prepare_keys(hash)
         res = hash.map do |k ,v|
-          [ key_to_method(k), v ]
+          [ _key_to_method(k), v ]
         end
         Hash[res]
+      end
+
+      def _path(key)
+        _levels + [ key ]
+      end
+
+      def _new_level_presenter(value, method_name)
+        self.class.new(value, _path(method_name))
       end
 
     end
 
     class CachedHashPresenter < SimpleHashPresenter
 
-      def initialize(hash)
+      def initialize(hash, levels=[])
         super
         @cache = {}
       end
@@ -63,19 +72,66 @@ module TarvitHelpers
       def value(method_name)
         @cache[method_name] ||= super
       end
-
     end
 
     class ObservableHashPresenter < SimpleHashPresenter
-      def initialize(hash)
+      def initialize(hash, levels=[])
         @_hash = hash
+        @_levels = levels
       end
 
       def _hash
-        prepare_keys(@_hash)
+        _prepare_keys(@_hash)
       end
     end
 
+    class CustomHashPresenter < CachedHashPresenter
+      attr_reader :_rules_holder
+
+      def initialize(hash, levels=[], rules_holder=nil, &rules)
+        super(hash, levels)
+        @_rules_holder = rules_holder || RulesHolder.new
+        rules.call(_rules_holder) if rules
+      end
+
+      def _transform_value(method_name, value)
+        rule = _rules_holder.rule_for(_path(method_name))
+        rule ? rule.value_transformer.call(value) : super
+      end
+
+      def _current_path(method_name)
+        _levels + [ method_name ]
+      end
+
+      protected
+
+      def _new_level_presenter(value, method_name)
+        self.class.new(value, _path(method_name), _rules_holder)
+      end
+
+      class RulesHolder
+        attr_reader :rules
+
+        def initialize
+          @rules = []
+        end
+
+        def when(path, &_transform_value)
+          self.rules << Rule.new(path, _transform_value)
+        end
+
+        def rule_for(path)
+          rules.find{|r| r.path == path }
+        end
+      end
+
+      class Rule
+        attr_reader :path, :value_transformer
+        def initialize(path, value_transformer)
+          @path, @value_transformer = path, value_transformer
+        end
+      end
+    end
   end
 end
 

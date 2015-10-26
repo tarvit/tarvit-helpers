@@ -71,6 +71,37 @@ observer.a
 original[:a] = 3
 observer.a
 => 3
+
+
+@hash = {
+    user: {
+        date: '11/11/2015',
+        age: '11',
+        address: [
+            'USA', 'NY', 'Ba Street'
+        ],
+        posts: [
+            { id: '1', title: 'some title' },
+            { id: '2', title: 'the other title' },
+        ],
+    }
+}
+presenter = HashPresenter::CustomHashPresenter.new(@hash) do |rules|
+  rules.when([ :user, :date ]) do |value|
+    Date.parse(value)
+  end
+
+  rules.when([ :user, :age ]){|age| age.to_i }
+  rules.when([ :user, :posts, :title ]){|title| title.capitalize }
+end
+
+presenter.user.date.class
+=> Date
+presenter.user.age
+=> 11
+presenter.user.posts[0].title
+=> "Some title"
+
 ```
 
 
