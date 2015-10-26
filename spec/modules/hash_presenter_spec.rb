@@ -177,10 +177,61 @@ describe HashPresenter::CustomHashPresenter do
       expect(presenter.user.posts[0].title).to eq('SOME TITLE')
     end
 
+    context 'Subclass' do
+      before :all do
+        @hash = {
+            accounts: [
+                {
+                    :id => 1,
+                    :name => :director,
+                    collections: [
+                        {
+                            :id => 42,
+                            :name => :test_collection,
+                        }
+                    ]
+                }
+            ]
+        }
+
+        class AccountsPresenter < HashPresenter::CustomHashPresenter
+
+          def _init_rules
+            rules = _rules
+
+            rules.when([:accounts, :name]) do |value|
+              value.to_s
+            end
+
+            rules.when([:accounts, :website]) do |value, object|
+              'www.johndoe.com/' + object.name.to_s
+            end
+
+            rules.when([:accounts, :collections, :name]) do |value|
+              value.to_s.camelize
+            end
+
+            rules.when([:accounts, :collections, :folder]) do |value, object|
+              "folders/#{object.name}"
+            end
+          end
+        end
+
+        @presenter = AccountsPresenter.new(@hash)
+      end
+
+      it 'should work as subclass' do
+        account = @presenter.accounts.first
+        expect(account.id).to eq(1)
+        expect(account.name).to eq('director')
+        expect(account.website).to eq('www.johndoe.com/director')
+        expect(account.collections[0].name).to eq('TestCollection')
+        expect(account.collections[0].folder).to eq('folders/TestCollection')
+      end
+
+    end
   end
-
 end
-
 
 describe HashPresenter do
 

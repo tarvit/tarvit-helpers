@@ -102,6 +102,59 @@ presenter.user.age
 presenter.user.posts[0].title
 => "Some title"
 
+
+@hash = {
+    accounts: [
+        {
+            :id => 1,
+            :name => :director,
+            collections: [
+                {
+                    :id => 42,
+                    :name => :test_collection,
+                }
+            ]
+        }
+    ]
+}
+
+class AccountsPresenter < HashPresenter::CustomHashPresenter
+
+  def _init_rules
+    rules = _rules
+
+    rules.when([:accounts, :name]) do |value|
+      value.to_s
+    end
+
+    rules.when([:accounts, :website]) do |value, object|
+      'www.johndoe.com/' + object.name.to_s
+    end
+
+    rules.when([:accounts, :collections, :name]) do |value|
+      value.to_s.camelize
+    end
+
+    rules.when([:accounts, :collections, :folder]) do |value, object|
+      "folders/#{object.name}"
+    end
+  end
+end
+
+@presenter = AccountsPresenter.new(@hash)
+
+account = @presenter.accounts.first
+account.id
+=> 1
+account.name
+=> 'director'
+account.website
+=> 'www.johndoe.com/director'
+account.collections[0].name
+=> 'TestCollection'
+account.collections[0].folder
+=> 'folders/TestCollection'
+
 ```
 
 

@@ -21,15 +21,18 @@ module TarvitHelpers
       end
 
       def method_missing(m, *args)
-        return value(m) if _accessor_method?(m)
+        return _value(m) if _accessor_method?(m)
         super
       end
 
       protected
 
-      def value(method_name)
-        res = self._hash[method_name]
-        _transform_value(method_name, res)
+      def _value(method_name)
+        _transform_value(method_name, _hash_value(method_name))
+      end
+
+      def _hash_value(method_name)
+        _hash[method_name]
       end
 
       def _transform_value(method_name, value)
@@ -63,13 +66,12 @@ module TarvitHelpers
     end
 
     class CachedHashPresenter < SimpleHashPresenter
-
       def initialize(hash, levels=[])
         super
         @cache = {}
       end
 
-      def value(method_name)
+      def _value(method_name)
         @cache[method_name] ||= super
       end
     end
@@ -90,13 +92,9 @@ module TarvitHelpers
 
       def initialize(hash, levels=[], rules_holder=nil, &rules)
         super(hash, levels)
-        @_rules_holder = rules_holder || RulesHolder.new
+        @_rules_holder = rules_holder || _init_rules_holder
+        _init_rules
         rules.call(_rules_holder) if rules
-      end
-
-      def _transform_value(method_name, value)
-        rule = _rules_holder.rule_for(_path(method_name))
-        rule ? rule.value_transformer.call(value) : super
       end
 
       def _current_path(method_name)
@@ -105,9 +103,27 @@ module TarvitHelpers
 
       protected
 
+      def _hash_value(method_name)
+        value =  super
+        rule = _rules_holder.rule_for(_path(method_name))
+        rule ? rule.value_transformer.call(value, self) : value
+      end
+
       def _new_level_presenter(value, method_name)
         self.class.new(value, _path(method_name), _rules_holder)
       end
+
+      def _init_rules; end
+
+      def _init_rules_holder
+        RulesHolder.new
+      end
+
+      def _accessor_method?(method_name)
+        super(method_name) || _rules_holder.rules.map{|r| r.path.last }.include?(method_name)
+      end
+
+      alias_method :_rules, :_rules_holder
 
       class RulesHolder
         attr_reader :rules
@@ -134,4 +150,3 @@ module TarvitHelpers
     end
   end
 end
-
