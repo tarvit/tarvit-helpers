@@ -11,7 +11,7 @@ module TarvitHelpers
     end
 
     def self.factory
-      { cached: CachedHashPresenter, observable: ObservableHashPresenter }
+      { cached: Cached, observable: Observable }
     end
 
   end

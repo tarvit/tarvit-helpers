@@ -1,6 +1,6 @@
 module TarvitHelpers
   module HashPresenter
-    class CachedHashPresenter < SimpleHashPresenter
+    class Cached < Simple
       def initialize(hash, levels=[])
         super
         @cache = {}

@@ -34,16 +34,16 @@ module BaseHashPresenterTest
   end
 end
 
-describe HashPresenter::SimpleHashPresenter do
+describe HashPresenter::Simple do
 
   extend BaseHashPresenterTest
-  test_presenter(HashPresenter::SimpleHashPresenter)
+  test_presenter(HashPresenter::Simple)
 
   context 'Special Behavior' do
 
     it 'should not depend on an attribute object' do
       original = { a: 2 }
-      hp = HashPresenter::SimpleHashPresenter.new(original)
+      hp = HashPresenter::Simple.new(original)
 
       expect(hp.a).to eq(2)
 
@@ -53,22 +53,22 @@ describe HashPresenter::SimpleHashPresenter do
     end
 
     it 'should regenerate method result for a nested hash' do
-      hp = HashPresenter::SimpleHashPresenter.new(a: { b: 1 })
+      hp = HashPresenter::Simple.new(a: { b: 1 })
       expect(hp.a.object_id).to_not eq(hp.a.object_id)
     end
   end
 end
 
-describe HashPresenter::CachedHashPresenter do
+describe HashPresenter::Cached do
 
   extend BaseHashPresenterTest
-  test_presenter(HashPresenter::CachedHashPresenter)
+  test_presenter(HashPresenter::Cached)
 
   context 'Special Behavior' do
 
     it 'should not depend on an attribute object' do
       original = { a: 2 }
-      hp = HashPresenter::CachedHashPresenter.new(original)
+      hp = HashPresenter::Cached.new(original)
 
       expect(hp.a).to eq(2)
 
@@ -78,23 +78,23 @@ describe HashPresenter::CachedHashPresenter do
     end
 
     it 'should not calculate result for a nested hash twice' do
-      hp = HashPresenter::CachedHashPresenter.new(a: { b: 1 })
+      hp = HashPresenter::Cached.new(a: { b: 1 })
       expect(hp.a.object_id).to eq(hp.a.object_id)
     end
   end
 end
 
 
-describe HashPresenter::ObservableHashPresenter do
+describe HashPresenter::Observable do
 
   extend BaseHashPresenterTest
-  test_presenter(HashPresenter::ObservableHashPresenter)
+  test_presenter(HashPresenter::Observable)
 
   context 'Special Behavior' do
 
     it 'should observe an attribute object' do
       original = { a: 2 }
-      hp = HashPresenter::ObservableHashPresenter.new(original)
+      hp = HashPresenter::Observable.new(original)
 
       expect(hp.a).to eq(2)
 
@@ -112,16 +112,16 @@ describe HashPresenter::ObservableHashPresenter do
     end
 
     it 'should regenerate method result for a nested hash' do
-      hp = HashPresenter::ObservableHashPresenter.new(a: { b: 1 })
+      hp = HashPresenter::Observable.new(a: { b: 1 })
       expect(hp.a.object_id).to_not eq(hp.a.object_id)
     end
   end
 end
 
 
-describe HashPresenter::CustomHashPresenter do
+describe HashPresenter::Custom do
   extend BaseHashPresenterTest
-  test_presenter(HashPresenter::CustomHashPresenter)
+  test_presenter(HashPresenter::Custom)
 
   context 'Special Behavior' do
     before :each do
@@ -141,7 +141,7 @@ describe HashPresenter::CustomHashPresenter do
     end
 
     it 'should customize presenter' do
-      presenter = HashPresenter::CustomHashPresenter.new(@hash) do |rules|
+      presenter = HashPresenter::Custom.new(@hash) do |rules|
         rules.when([ :user, :date ]) do |value|
           Date.parse(value)
         end
@@ -158,7 +158,7 @@ describe HashPresenter::CustomHashPresenter do
     end
 
     it 'should declare nested presenters' do
-      presenter = HashPresenter::CustomHashPresenter.new(@hash) do |rules|
+      presenter = HashPresenter::Custom.new(@hash) do |rules|
 
         rules.when([ :user, :date ]) do |value|
           Date.parse(value)
@@ -166,7 +166,7 @@ describe HashPresenter::CustomHashPresenter do
 
         rules.when([ :user, :posts ])do |posts|
           posts.map do |post|
-            HashPresenter::CustomHashPresenter.new(post) do |post_rules|
+            HashPresenter::Custom.new(post) do |post_rules|
               post_rules.when([ :title ]){|title| title.upcase }
             end
           end
@@ -185,16 +185,14 @@ describe HashPresenter::CustomHashPresenter do
                     :id => 1,
                     :name => :director,
                     collections: [
-                        {
-                            :id => 42,
-                            :name => :test_collection,
-                        }
+                        { :id => 42, :name => :test_collection },
+                        { :id => 24, :name => :best_collection },
                     ]
                 }
             ]
         }
 
-        class AccountsPresenter < HashPresenter::CustomHashPresenter
+        class AccountsPresenter < HashPresenter::Custom
 
           def _init_rules
             rules = _rules
@@ -227,6 +225,8 @@ describe HashPresenter::CustomHashPresenter do
         expect(account.website).to eq('www.johndoe.com/director')
         expect(account.collections[0].name).to eq('TestCollection')
         expect(account.collections[0].folder).to eq('folders/TestCollection')
+        expect(account.collections[1].name).to eq('BestCollection')
+        expect(account.collections[1].folder).to eq('folders/BestCollection')
       end
 
     end
@@ -248,12 +248,12 @@ describe HashPresenter do
 
   it 'should get an observable presenter' do
     hp = HashPresenter.present({  }, :observable)
-    expect(hp).to be_a(HashPresenter::ObservableHashPresenter)
+    expect(hp).to be_a(HashPresenter::Observable)
   end
 
   it 'should get a cached presenter' do
     hp = HashPresenter.present({  }, :cached)
-    expect(hp).to be_a(HashPresenter::CachedHashPresenter)
+    expect(hp).to be_a(HashPresenter::Cached)
   end
 
 end

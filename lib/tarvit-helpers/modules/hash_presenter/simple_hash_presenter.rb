@@ -1,7 +1,7 @@
 module TarvitHelpers
   module HashPresenter
 
-    class SimpleHashPresenter
+    class Simple
       require 'active_support/core_ext/string'
 
       attr_reader :_hash, :_levels

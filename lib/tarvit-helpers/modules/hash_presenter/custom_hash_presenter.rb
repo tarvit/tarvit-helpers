@@ -1,7 +1,7 @@
 module TarvitHelpers
   module HashPresenter
 
-    class CustomHashPresenter < CachedHashPresenter
+    class Custom < Cached
       attr_reader :_rules_holder
 
       def initialize(hash, levels=[], rules_holder=nil, &rules)
