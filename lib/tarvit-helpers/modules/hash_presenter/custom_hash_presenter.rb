@@ -15,23 +15,24 @@ module TarvitHelpers
         current_level = rule_path.shift
 
         if rule_path.empty?
-          presenter = _path_presenter(current_path)
-          node[ current_level ] = rule.value_transformer.call(node[current_level], presenter)
-          return
+          _assign_value(node, rule, current_path, current_level) && return
         end
 
         current_node = node[current_level]
         current_path << current_level
 
         if current_node.is_a?(Array)
-          current_node.each_with_index do |el, index|
-            path = current_path.clone
-            path << index
-            _apply_rule(current_node[index], rule, rule_path.clone, path)
+          current_node.each_with_index do |node_element, index|
+            _apply_rule(node_element, rule, rule_path.clone, (current_path + [ index ]))
           end
         else
           _apply_rule(current_node, rule, rule_path.clone, current_path.clone)
         end
+      end
+
+      def _assign_value(node, rule, current_path, current_level)
+        presenter = _path_presenter(current_path)
+        node[ current_level ] = rule.value_transformer.call(node[current_level], presenter)
       end
 
       def _path_presenter(path)
