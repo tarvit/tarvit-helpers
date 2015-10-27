@@ -242,7 +242,6 @@ describe HashPresenter::Custom do
             ]
         })
       end
-
     end
   end
 end

@@ -6,8 +6,8 @@ module TarvitHelpers
 
       def initialize(hash, levels=[], rules_holder=nil, &rules)
         super(hash, levels)
-        @_rules_holder = rules_holder || _init_rules_holder
-        _init_rules
+        @_rules_holder = rules_holder || RulesHolder.new
+        _init_rules if _rules_holder.rules.empty?
         rules.call(_rules_holder) if rules
       end
 
@@ -28,10 +28,6 @@ module TarvitHelpers
       end
 
       def _init_rules; end
-
-      def _init_rules_holder
-        RulesHolder.new
-      end
 
       def _accessor_method?(method_name)
         super(method_name) || _rules_holder.rules.map{|r| r.path.last }.include?(method_name)
