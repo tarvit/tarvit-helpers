@@ -4,8 +4,8 @@ module TarvitHelpers
     class WithRules < Cached
       attr_reader :_rules_holder
 
-      def initialize(hash, levels=[], rules_holder=nil, &rules)
-        super(hash, levels)
+      def initialize(hash, levels=[], parent=nil, rules_holder=nil, &rules)
+        super(hash, levels, parent)
         @_rules_holder = rules_holder || RulesHolder.new
         _init_rules if _rules_holder.rules.empty?
         rules.call(_rules_holder) if rules
@@ -24,7 +24,7 @@ module TarvitHelpers
       end
 
       def _new_level_presenter(value, method_name)
-        self.class.new(value, _path(method_name), _rules_holder)
+        self.class.new(value, _path(method_name), self, _rules_holder)
       end
 
       def _init_rules; end

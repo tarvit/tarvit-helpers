@@ -212,6 +212,10 @@ describe HashPresenter::Custom do
             rules.when([:accounts, :collections, :folder]) do |value, object|
               "folders/#{object.name}"
             end
+
+            rules.when([:accounts, :collections, :global_folder]) do |value, object|
+              "#{object._parent.name}/folders/#{object.name}"
+            end
           end
         end
 
@@ -227,6 +231,7 @@ describe HashPresenter::Custom do
         expect(account.collections[0].folder).to eq('folders/TestCollection')
         expect(account.collections[1].name).to eq('BestCollection')
         expect(account.collections[1].folder).to eq('folders/BestCollection')
+        expect(account.collections[1].global_folder).to eq('director/folders/BestCollection')
 
         expect(@presenter._custom_hash).to eq({
             :accounts => [
@@ -234,8 +239,8 @@ describe HashPresenter::Custom do
                     :id=>1,
                     :name=>'director',
                     :collections=>[
-                        {:id=>42, :name=>'TestCollection', :folder=>'folders/TestCollection'},
-                        {:id=>24, :name=>'BestCollection', :folder=>'folders/BestCollection'},
+                        {:id=>42, :name=>'TestCollection', :folder=>'folders/TestCollection', :global_folder=>'director/folders/TestCollection'},
+                        {:id=>24, :name=>'BestCollection', :folder=>'folders/BestCollection', :global_folder=>'director/folders/BestCollection'},
                     ],
                     :website=>'www.johndoe.com/director'
                 }

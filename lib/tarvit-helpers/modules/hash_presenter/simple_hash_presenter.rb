@@ -4,11 +4,12 @@ module TarvitHelpers
     class Simple
       require 'active_support/core_ext/string'
 
-      attr_reader :_hash, :_levels
+      attr_reader :_hash, :_levels, :_parent
 
-      def initialize(hash, levels=[])
+      def initialize(hash, levels=[], parent=nil)
         @_hash = _prepare_keys(hash)
         @_levels = levels
+        @_parent = parent
       end
 
       def method_missing(m, *args)
@@ -51,7 +52,7 @@ module TarvitHelpers
       end
 
       def _new_level_presenter(value, method_name)
-        self.class.new(value, _path(method_name))
+        self.class.new(value, _path(method_name), self)
       end
 
     end
