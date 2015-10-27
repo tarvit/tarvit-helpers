@@ -148,7 +148,7 @@ describe HashPresenter::Custom do
 
         rules.when([ :user, :age ]){|age| age.to_i }
         rules.when([ :user, :posts, :title ]){|title| title.capitalize }
-        rules.when([ :user,:address ]){|list| list.join(?/) }
+        rules.when([ :user, :address ]){|list| list.join(?/) }
       end
 
       expect(presenter.user.date).to eq(Date.new(2015, 11, 11))
@@ -227,6 +227,20 @@ describe HashPresenter::Custom do
         expect(account.collections[0].folder).to eq('folders/TestCollection')
         expect(account.collections[1].name).to eq('BestCollection')
         expect(account.collections[1].folder).to eq('folders/BestCollection')
+
+        expect(@presenter._custom_hash).to eq({
+            :accounts => [
+                {
+                    :id=>1,
+                    :name=>'director',
+                    :collections=>[
+                        {:id=>42, :name=>'TestCollection', :folder=>'folders/TestCollection'},
+                        {:id=>24, :name=>'BestCollection', :folder=>'folders/BestCollection'},
+                    ],
+                    :website=>'www.johndoe.com/director'
+                }
+            ]
+        })
       end
 
     end

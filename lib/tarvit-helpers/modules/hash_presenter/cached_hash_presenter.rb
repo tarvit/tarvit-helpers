@@ -12,4 +12,3 @@ module TarvitHelpers
     end
   end
 end
-
