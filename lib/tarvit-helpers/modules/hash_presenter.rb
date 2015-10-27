@@ -3,6 +3,7 @@ module TarvitHelpers
     require_relative '../modules/hash_presenter/simple_hash_presenter'
     require_relative '../modules/hash_presenter/cached_hash_presenter'
     require_relative '../modules/hash_presenter/observable_hash_presenter'
+    require_relative '../modules/hash_presenter/with_rules_hash_presenter'
     require_relative '../modules/hash_presenter/custom_hash_presenter'
 
     def self.present(hash, option = :cached )
