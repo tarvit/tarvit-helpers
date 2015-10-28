@@ -2,8 +2,8 @@ module TarvitHelpers
   module HashPresenter
     class Observable < Simple
       def initialize(hash, levels=[], parent=nil)
+        super
         @_hash = hash
-        @_levels = levels
       end
 
       def _hash

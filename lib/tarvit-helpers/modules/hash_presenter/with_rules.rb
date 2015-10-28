@@ -24,7 +24,7 @@ module TarvitHelpers
       end
 
       def _new_level_presenter(value, method_name)
-        self.class.new(value, _path(method_name), self, _rules_holder)
+        _new_level_presenter_klass.new(value, _path(method_name), self, _rules_holder)
       end
 
       def _add_rules(rules_holder); end

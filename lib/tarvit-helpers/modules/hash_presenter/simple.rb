@@ -12,6 +12,10 @@ module TarvitHelpers
         @_parent = parent
       end
 
+      def _root?
+        _parent.nil?
+      end
+
       def method_missing(m, *args)
         return _value(m) if _accessor_method?(m)
         super
@@ -52,9 +56,12 @@ module TarvitHelpers
       end
 
       def _new_level_presenter(value, method_name)
-        self.class.new(value, _path(method_name), self)
+        _new_level_presenter_klass.new(value, _path(method_name), self)
       end
 
+      def _new_level_presenter_klass
+        self.class
+      end
     end
   end
 end

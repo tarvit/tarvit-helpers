@@ -29,5 +29,12 @@ module BaseHashPresenterTest
       expect(hp.a[1].c).to eq(2)
       expect(hp.a[2]).to eq(3)
     end
+
+    it 'should detect root node' do
+      hp = hash_presenter.new(a: { b: { c: 1 }, d: { e: 2 } } )
+      expect(hp._root?).to be_truthy
+      expect(hp.a.b._root?).to be_falsey
+      expect(hp.a.d._root?).to be_falsey
+    end
   end
 end
