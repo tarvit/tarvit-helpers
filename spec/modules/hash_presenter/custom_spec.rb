@@ -73,9 +73,7 @@ describe HashPresenter::Custom do
 
         class AccountsPresenter < HashPresenter::Custom
 
-          def _init_rules
-            rules = _rules
-
+          def _add_rules(rules)
             rules.when([:accounts, :name]) do |value|
               value.to_s
             end
