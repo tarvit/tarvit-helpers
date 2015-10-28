@@ -73,6 +73,12 @@ describe HashPresenter::Custom do
 
         class AccountsPresenter < HashPresenter::Custom
 
+          def _modify_hash(hash)
+            res = super(hash)
+            res[:extra] = :value
+            res
+          end
+
           def _add_rules(rules)
             rules.when([:accounts, :name]) do |value|
               value.to_s
@@ -110,6 +116,8 @@ describe HashPresenter::Custom do
         expect(account.collections[1].folder).to eq('folders/BestCollection')
         expect(account.collections[1].global_folder).to eq('director/folders/BestCollection')
 
+        expect(@presenter.extra).to eq(:value)
+
         expect(@presenter._custom_hash).to eq({
             :accounts => [
                 {
@@ -121,7 +129,8 @@ describe HashPresenter::Custom do
                     ],
                     :website=>'www.johndoe.com/director'
                 }
-            ]
+            ],
+            :extra => :value,
         })
       end
     end

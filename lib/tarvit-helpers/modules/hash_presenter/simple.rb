@@ -7,7 +7,7 @@ module TarvitHelpers
       attr_reader :_hash, :_levels, :_parent
 
       def initialize(hash, levels=[], parent=nil)
-        @_hash = _prepare_keys(hash)
+        @_hash = _modify_hash(_prepare_keys(hash))
         @_levels = levels
         @_parent = parent
       end
@@ -61,6 +61,10 @@ module TarvitHelpers
 
       def _new_level_presenter_klass
         self.class
+      end
+
+      def _modify_hash(hash)
+        hash
       end
     end
   end
