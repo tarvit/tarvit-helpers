@@ -36,11 +36,9 @@ module TarvitHelpers
       end
 
       def _path_presenter(path)
-        res = self
-        path.each do |level|
-          res = res.is_a?(Array) ? res[level] : res.send(level)
+        path.inject(self) do |res, level|
+          res.is_a?(Array) ? res[level] : res.send(level)
         end
-        res
       end
 
     end
