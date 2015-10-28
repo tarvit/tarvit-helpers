@@ -14,5 +14,5 @@ require_relative '../lib/tarvit-helpers/extensions/counter'
 include TarvitHelpers
 
 RSpec.configure do |config|
-
+  require_relative 'support/base_tests/base_hash_presenter_test'
 end

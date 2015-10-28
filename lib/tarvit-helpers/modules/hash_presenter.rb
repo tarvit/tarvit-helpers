@@ -1,10 +1,10 @@
 module TarvitHelpers
   module HashPresenter
-    require_relative '../modules/hash_presenter/simple_hash_presenter'
-    require_relative '../modules/hash_presenter/cached_hash_presenter'
-    require_relative '../modules/hash_presenter/observable_hash_presenter'
-    require_relative '../modules/hash_presenter/with_rules_hash_presenter'
-    require_relative '../modules/hash_presenter/custom_hash_presenter'
+    require_relative '../modules/hash_presenter/simple'
+    require_relative '../modules/hash_presenter/cached'
+    require_relative '../modules/hash_presenter/observable'
+    require_relative '../modules/hash_presenter/with_rules'
+    require_relative '../modules/hash_presenter/custom'
 
     def self.present(hash, option = :cached )
       raise ArgumentError.new("#{ hash.class } is not a Hash") unless hash.is_a?(Hash)
