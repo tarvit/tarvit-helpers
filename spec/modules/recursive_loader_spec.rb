@@ -17,6 +17,11 @@ describe RecursiveLoader do
     expect($arr).to eq([:b, :a, :c, :d, :e, :b, :a])
   end
 
+  it 'load with default order' do
+    loader.load_modules(@dir, %w{ z y x })
+    expect($arr).to eq([:a, :b, :a, :b, :d, :e, :c])
+  end
+
   def loader(method = :load)
     RecursiveLoader.new(method)
   end
