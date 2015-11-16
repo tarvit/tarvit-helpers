@@ -10,7 +10,7 @@ module TarvitHelpers
 
     def load_modules(dir, priorities=[])
       load_ruby_files(dir, priorities)
-      prioritize_dirs(global_dirs(dir), priorities).each do |subdir|
+      prioritize(global_dirs(dir), priorities).each do |subdir|
         load_modules dir.join(subdir), priorities
       end
     end
@@ -56,7 +56,7 @@ module TarvitHelpers
       end.sort
     end
 
-    def prioritize_dirs(list, priorities)
+    def prioritize(list, priorities)
       (priorities.select{|p| list.include?(p) } + list ).uniq
     end
 
@@ -64,7 +64,7 @@ module TarvitHelpers
       files_priorities = priorities.map do |p|
         p.include?(RB_EXT) ? p : (p+RB_EXT)
       end
-      prioritize_dirs(files, files_priorities)
+      prioritize(files, files_priorities)
     end
   end
 end
